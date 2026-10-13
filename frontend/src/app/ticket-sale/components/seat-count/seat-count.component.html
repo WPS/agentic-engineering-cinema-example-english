@@ -1,0 +1,21 @@
+<div class="card card-border m-4 shadow-md bg-gray-50">
+  <div class="card-body items-center">
+    @if (done()) {
+      <p class="italic">{{ 'seats.count.chosen' | t }}</p>
+      <p class="card-title">{{ seatCountControl.value }}</p>
+    } @else {
+      <p class="italic">{{ 'seats.count.question' | t }}</p>
+      <select class="select w-40" [formControl]="seatCountControl">
+        <option disabled selected [value]="null">{{ 'seats.count.placeholder' | t }}</option>
+        @for (count of countOptions; track count) {
+          <option [value]="count">{{ count }}</option>
+        }
+      </select>
+      <div class="card-actions">
+        <button class="btn btn-sm btn-primary" (click)="submitSeatCount()"
+          [disabled]="seatCountControl.disabled">{{ 'seats.count.confirm' | t }}
+        </button>
+      </div>
+    }
+  </div>
+</div>

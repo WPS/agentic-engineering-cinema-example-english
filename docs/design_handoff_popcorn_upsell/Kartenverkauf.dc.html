@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/kinosoft-788264d2-08ce-414f-8df1-65281ce03893/tokens/theme.css">
+  <link rel="stylesheet" href="_ds/kinosoft-788264d2-08ce-414f-8df1-65281ce03893/styles.css">
+  <script src="_ds/kinosoft-788264d2-08ce-414f-8df1-65281ce03893/_ds_bundle.js"></script>
+</helmet>
+
+<div data-theme="emerald" style="min-height:100vh; background:var(--color-base-100); color:var(--color-base-content); padding-bottom:64px;">
+
+  <header style="border-bottom:1px solid var(--color-base-200); padding:20px 0; margin-bottom:8px;">
+    <h1 style="text-align:center; font-size:30px; font-weight:400; margin:0;">Kartenverkauf</h1>
+  </header>
+
+  <div style="display:flex; flex-direction:column; align-items:center; gap:12px; padding:0 16px;">
+
+    <!-- Schritt 1 -->
+    <div class="badge badge-lg badge-primary badge-soft" style="margin-top:24px; padding-right:6px; white-space:nowrap; flex-shrink:0;">
+      <span>Vorstellung wählen</span>
+      <input type="checkbox" class="checkbox checkbox-xs border-primary text-primary" style="cursor:default;" checked="{{ done }}" readOnly>
+    </div>
+    <div class="card card-border shadow-md" style="background:#f9fafb; width:100%; max-width:28rem;">
+      <div class="card-body" style="align-items:center; text-align:center;">
+        <p class="italic">Sie haben folgende Vorstellung gewählt:</p>
+        <div class="card-title">The Fast and the Curious</div>
+        <div>Sonntag <span>⋅</span> 23.03.2025 <span>⋅</span> 14:30 Uhr <span>⋅</span> kleiner Saal</div>
+      </div>
+    </div>
+
+    <!-- Schritt 2 -->
+    <div class="badge badge-lg badge-primary badge-soft" style="margin-top:24px; padding-right:6px; white-space:nowrap; flex-shrink:0;">
+      <span>Kartenanzahl wählen</span>
+      <input type="checkbox" class="checkbox checkbox-xs border-primary text-primary" style="cursor:default;" checked="{{ done }}" readOnly>
+    </div>
+    <div class="card card-border shadow-md" style="background:#f9fafb; width:100%; max-width:28rem;">
+      <div class="card-body" style="align-items:center; text-align:center;">
+        <p class="italic">Sie haben folgende Platzanzahl gewählt:</p>
+        <div class="card-title">2</div>
+      </div>
+    </div>
+
+    <!-- Schritt 3 -->
+    <div class="badge badge-lg badge-primary badge-soft" style="margin-top:24px; padding-right:6px; white-space:nowrap; flex-shrink:0;">
+      <span>Plätze wählen</span>
+      <input type="checkbox" class="checkbox checkbox-xs border-primary text-primary" style="cursor:default;" checked="{{ done }}" readOnly>
+    </div>
+    <div class="card card-border shadow-md" style="background:#f9fafb; width:100%; max-width:28rem;">
+      <div class="card-body" style="align-items:center; text-align:center;">
+        <p class="italic">Sie haben folgende Plätze gewählt:</p>
+        <div class="card-title">Reihe 1 <span>⋅</span> Plätze 4 - 5</div>
+      </div>
+    </div>
+
+    <!-- Schritt 3.5 — Popcorn (optional) -->
+    <div class="badge badge-lg badge-accent badge-soft" style="margin-top:24px; display:inline-flex; align-items:center; gap:6px; white-space:nowrap; flex-shrink:0;">
+      <span>Popcorn dazu?</span>
+      <span style="opacity:.6; font-size:11px;">optional</span>
+    </div>
+
+    <div class="card card-border shadow-md" style="width:100%; max-width:28rem; background:#f9fafb;">
+      <div class="card-body">
+
+        <!-- Einladender Kopf -->
+        <div style="display:flex; align-items:flex-start; gap:12px;">
+          <div style="font-size:36px; line-height:1;" aria-hidden="true">🍿</div>
+          <div style="flex:1;">
+            <div class="card-title" style="font-size:18px;">Lust auf frisches Popcorn?</div>
+            <p style="font-size:14px; opacity:.7; margin:4px 0 0;">Frisch gemacht schmeckt es im Kino einfach am besten – ganz so, wie Sie es mögen.</p>
+          </div>
+        </div>
+
+        <!-- Leerzustand: sanfter Anstoß, leicht zu überspringen -->
+        <sc-if value="{{ noPopcorn }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex; flex-direction:column; gap:12px; margin-top:16px;">
+            <button class="btn btn-accent" style="display:flex; align-items:center; justify-content:space-between; width:100%;" onClick="{{ addSuggested }}">
+              <span style="display:inline-flex; align-items:center; gap:8px;"><span aria-hidden="true">🍿</span> Beliebt: {{ empfehlungLabel }}</span>
+              <span style="font-weight:600;">+ {{ empfehlungPreisText }}</span>
+            </button>
+            <button class="btn btn-ghost btn-sm" onClick="{{ addPortion }}">Selbst zusammenstellen</button>
+            <p style="font-size:12px; opacity:.5; text-align:center; margin:0;">Kein Popcorn? Kein Problem – einfach weiter zur Zahlung.</p>
+          </div>
+        </sc-if>
+
+        <!-- Aktiv: Portionen konfigurieren -->
+        <sc-if value="{{ hasPopcorn }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex; flex-direction:column; gap:12px; margin-top:16px;">
+
+            <sc-for list="{{ portionsView }}" as="p" hint-placeholder-count="0">
+              <div class="rounded-box" style="background:rgba(255,255,255,.7); border:1px solid var(--color-base-200); padding:12px; display:flex; flex-direction:column; gap:12px;">
+
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                  <span style="font-size:13px; font-weight:500; opacity:.7;">{{ p.label }}</span>
+                  <button class="btn btn-ghost btn-xs btn-circle" style="opacity:.5;" title="Portion entfernen" onClick="{{ p.remove }}">✕</button>
+                </div>
+
+                <!-- Größe -->
+                <div>
+                  <p style="font-size:12px; opacity:.6; margin:0 0 4px;">Größe</p>
+                  <div class="join" style="display:flex; width:100%;">
+                    <button class="{{ p.kleinClass }}" style="flex:1; height:auto; padding:6px 4px; line-height:1.2;" onClick="{{ p.setKlein }}">Klein<br><span style="opacity:.7; font-size:11px;">3 €</span></button>
+                    <button class="{{ p.mittelClass }}" style="flex:1; height:auto; padding:6px 4px; line-height:1.2;" onClick="{{ p.setMittel }}">Mittel<br><span style="opacity:.7; font-size:11px;">5 €</span></button>
+                    <button class="{{ p.grossClass }}" style="flex:1; height:auto; padding:6px 4px; line-height:1.2;" onClick="{{ p.setGross }}">Groß<br><span style="opacity:.7; font-size:11px;">7 €</span></button>
+                  </div>
+                </div>
+
+                <!-- Geschmack -->
+                <div>
+                  <p style="font-size:12px; opacity:.6; margin:0 0 4px;">Geschmack</p>
+                  <div style="display:flex; flex-direction:row; flex-wrap:wrap; gap:16px;">
+                    <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                      <input type="radio" name="{{ p.radioName }}" class="radio radio-sm radio-accent" checked="{{ p.salzig }}" onChange="{{ p.setSalzig }}">
+                      <span>salzig</span>
+                    </label>
+                    <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                      <input type="radio" name="{{ p.radioName }}" class="radio radio-sm radio-accent" checked="{{ p.suess }}" onChange="{{ p.setSuess }}">
+                      <span>süß</span>
+                    </label>
+                    <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                      <input type="radio" name="{{ p.radioName }}" class="radio radio-sm radio-accent" checked="{{ p.gemischt }}" onChange="{{ p.setGemischt }}">
+                      <span>gemischt</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Zeilensumme -->
+                <div style="display:flex; align-items:center; justify-content:flex-end;">
+                  <span style="font-weight:600;">{{ p.lineText }}</span>
+                </div>
+
+              </div>
+            </sc-for>
+
+            <button class="btn btn-accent btn-soft btn-sm" style="width:100%;" onClick="{{ addPortion }}">+ Weitere Portion hinzufügen</button>
+
+            <div style="display:flex; align-items:center; justify-content:space-between; padding-top:4px;">
+              <span style="font-size:14px; opacity:.7;">Popcorn gesamt</span>
+              <span style="font-weight:600;">{{ popcornTotalText }}</span>
+            </div>
+
+            <button class="btn btn-ghost btn-xs" style="opacity:.5; align-self:center;" onClick="{{ clearAll }}">Doch kein Popcorn</button>
+          </div>
+        </sc-if>
+
+      </div>
+    </div>
+
+    <!-- Schritt 4 — Zahlung -->
+    <div class="badge badge-lg badge-primary badge-soft" style="margin-top:24px; padding-right:6px; white-space:nowrap; flex-shrink:0;">
+      <span>Kinokarten zahlen</span>
+      <input type="checkbox" class="checkbox checkbox-xs border-primary text-primary" style="cursor:default;" readOnly>
+    </div>
+    <div class="card card-border shadow-md" style="background:#f9fafb; width:100%; max-width:28rem;">
+      <div class="card-body" style="align-items:center; text-align:center;">
+
+        <sc-if value="{{ hasPopcorn }}" hint-placeholder-val="{{ false }}">
+          <div style="width:100%; max-width:20rem; display:flex; flex-direction:column; gap:4px; font-size:14px; margin-bottom:4px;">
+            <div style="display:flex; justify-content:space-between;"><span style="opacity:.7;">Kinokarten (2)</span><span>{{ ticketTotalText }}</span></div>
+            <div style="display:flex; justify-content:space-between;"><span style="opacity:.7;">Popcorn</span><span>{{ popcornTotalText }}</span></div>
+            <div style="border-top:1px solid var(--color-base-300); margin:4px 0;"></div>
+          </div>
+        </sc-if>
+
+        <p class="italic">Zu zahlender Betrag:</p>
+        <div style="font-size:24px; font-weight:700;">{{ grandTotalText }}</div>
+        <div class="card-actions" style="margin-top:8px;">
+          <button class="btn btn-primary">Weiter zur Zahlung</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 600, &quot;height&quot;: 1400 },
+  &quot;vorauswahl&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Popcorn-Nudge&quot; },
+  &quot;empfehlung&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;Klein&quot;, &quot;Mittel&quot;, &quot;Groß&quot;], &quot;default&quot;: &quot;Mittel&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Popcorn-Nudge&quot; }
+}">
+class Component extends DCLogic {
+  state = { portions: [], nextId: 1 };
+  prices = { Klein: 3, Mittel: 5, "Groß": 7 };
+  ticketTotal = 21;
+
+  componentDidMount() {
+    if (this.props.vorauswahl) {
+      this.addPortion(this.props.empfehlung || "Mittel", "gemischt");
+    }
+  }
+
+  addPortion(size, flavor) {
+    this.setState(s => ({
+      portions: [...s.portions, { id: s.nextId, size: size || "Mittel", flavor: flavor || "gemischt", qty: 1 }],
+      nextId: s.nextId + 1,
+    }));
+  }
+  update(id, patch) {
+    this.setState(s => ({ portions: s.portions.map(p => p.id === id ? { ...p, ...patch } : p) }));
+  }
+  remove(id) {
+    this.setState(s => ({ portions: s.portions.filter(p => p.id !== id) }));
+  }
+  clearAll() { this.setState({ portions: [] }); }
+
+  fmt(n) { return n.toFixed(2).replace(".", ",") + " EUR"; }
+
+  renderVals() {
+    const prices = this.prices;
+    const empf = this.props.empfehlung || "Mittel";
+    const sizeClass = (sel, val) =>
+      "join-item btn btn-sm" + (sel === val ? " btn-accent" : " btn-ghost");
+
+    const portionsView = this.state.portions.map((p, i) => {
+      const line = prices[p.size] * p.qty;
+      return {
+        id: p.id,
+        qty: p.qty,
+        label: "Portion " + (i + 1),
+        lineText: this.fmt(line),
+        radioName: "flavor-" + p.id,
+        kleinClass: sizeClass(p.size, "Klein"),
+        mittelClass: sizeClass(p.size, "Mittel"),
+        grossClass: sizeClass(p.size, "Groß"),
+        salzig: p.flavor === "salzig",
+        suess: p.flavor === "süß",
+        gemischt: p.flavor === "gemischt",
+        setKlein: () => this.update(p.id, { size: "Klein" }),
+        setMittel: () => this.update(p.id, { size: "Mittel" }),
+        setGross: () => this.update(p.id, { size: "Groß" }),
+        setSalzig: () => this.update(p.id, { flavor: "salzig" }),
+        setSuess: () => this.update(p.id, { flavor: "süß" }),
+        setGemischt: () => this.update(p.id, { flavor: "gemischt" }),
+        inc: () => this.update(p.id, { qty: p.qty + 1 }),
+        dec: () => this.update(p.id, { qty: Math.max(1, p.qty - 1) }),
+        remove: () => this.remove(p.id),
+      };
+    });
+
+    const popcornTotal = this.state.portions.reduce((a, p) => a + prices[p.size] * p.qty, 0);
+    const hasPopcorn = this.state.portions.length > 0;
+
+    return {
+      portionsView,
+      done: true,
+      hasPopcorn,
+      noPopcorn: !hasPopcorn,
+      empfehlungLabel: empf + " · gemischt",
+      empfehlungPreisText: this.fmt(prices[empf]),
+      popcornTotalText: this.fmt(popcornTotal),
+      ticketTotalText: this.fmt(this.ticketTotal),
+      grandTotalText: this.fmt(this.ticketTotal + popcornTotal),
+      addSuggested: () => this.addPortion(empf, "gemischt"),
+      addPortion: () => this.addPortion("Mittel", "gemischt"),
+      clearAll: () => this.clearAll(),
+    };
+  }
+}
+</script>
+</body>
+</html>

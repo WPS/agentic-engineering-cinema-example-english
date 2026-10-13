@@ -1,0 +1,47 @@
+<app-navbar [title]="'ticketSale.title' | t"/>
+
+<div class="flex flex-row">
+  <div class="flex-1"></div>
+  <div class="flex-auto">
+    <div class="flex flex-col items-center">
+      @if (showScreeningActive() || showScreeningDone()) {
+        <app-step-badge [text]="'ticketSale.step.screening' | t" [checked]="showScreeningDone()"/>
+        <app-screening class="w-lg"
+                       [screeningId]="screeningId()!"
+                       (screeningLoaded)="screeningLoaded($event)"
+        />
+      }
+      @if (showSeatCountActive() || showSeatCountDone()) {
+        <app-step-badge [text]="'ticketSale.step.seatCount' | t" [checked]="showSeatCountDone()"/>
+        <app-seat-count class="w-lg"
+                        [screening]="selectedScreening()!"
+                        (seatCountConfirmed)="seatCountSelected($event)"
+        />
+      }
+      @if (showSeatSelectionActive() || showSeatSelectionDone()) {
+        <app-step-badge [text]="'ticketSale.step.seats' | t" [checked]="showSeatSelectionDone()"/>
+        <app-seating-plan class="min-w-lg w-auto"
+                          [screening]="selectedScreening()!"
+                          [seatCount]="selectedSeatCount()!"
+                          (seatsConfirmed)="seatsSelected($event)"
+        />
+      }
+      @if (showPaymentActive() || showPaymentDone()) {
+        <app-step-badge [text]="'ticketSale.step.payment' | t" [checked]="showPaymentDone()"/>
+        <app-checkout class="w-lg"
+                      [screening]="selectedScreening()!"
+                      [seats]="selectedSeats()!"
+                      (paymentConfirmed)="paymentConfirmed($event)"
+        />
+      }
+      @if (showTicketsActive() || showTicketsDone()) {
+        <app-step-badge [text]="'ticketSale.step.tickets' | t" [checked]="showTicketsDone()"/>
+        <app-tickets class="min-w-lg w-auto"
+                     [paymentConfirmation]="paymentConfirmation()!"
+                     (ticketsPrinted)="ticketsPrinted($event)"
+        />
+      }
+    </div>
+  </div>
+  <div class="flex-1"></div>
+</div>

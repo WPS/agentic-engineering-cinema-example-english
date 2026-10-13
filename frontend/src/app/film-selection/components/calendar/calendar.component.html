@@ -1,0 +1,14 @@
+<div class="flex justify-center">
+  <div class="join m-4" role="radiogroup" [attr.aria-label]="'calendar.weekdays' | t">
+    @for (date of selectableDates(); track date) {
+      <button class="join-item btn btn-secondary btn-soft p-8"
+        (click)="selectDate(date)"
+        [disabled]="isBeforeToday(date)"
+        role="radio"
+        [attr.aria-checked]="selectedDate().toDateString() === date.toDateString()"
+        [class.btn-active]="selectedDate().toDateString() === date.toDateString()">
+        {{ date | localizedDate: 'weekdayShort' }}<br/>{{ date | localizedDate: 'dayMonth' }}
+      </button>
+    }
+  </div>
+</div>

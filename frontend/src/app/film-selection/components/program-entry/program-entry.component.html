@@ -1,0 +1,31 @@
+<div class="card card-side card-border m-4 shadow-md bg-gray-50">
+  <figure class="flex-1/4">
+    <img src="{{film().posterUrl}}" [alt]="'film.poster' | t: {title: film().title}">
+  </figure>
+  <div class="card-body flex-3/4">
+    <h2 class="card-title">{{ film().title }}</h2>
+    <div class="flex flex-row gap-1 text-info-content">
+      <span>{{ 'film.ageRating' | t: {age: film().ageRating} }}</span>
+      <span>⋅</span>
+      <span>{{ film().runtimeMinutes | duration }}</span>
+      <span>⋅</span>
+      <span>{{ film().genre | localized }}</span>
+    </div>
+    <p>{{ film().description | localized }}</p>
+    <div class="flex flex-row gap-1 text-info-content">
+      <span>{{ 'film.director' | t: {name: film().director} }}</span>
+      <span>⋅</span>
+      <span>{{ 'film.starring' | t: {names: film().leadActors} }}</span>
+      <span>⋅</span>
+      <span>{{ film().language | localized }}</span>
+    </div>
+    <div class="card-actions">
+      @for (screening of film().screenings; track screening) {
+        <button class="btn btn-primary mt-3 min-w-32 min-h-20"
+          (click)="selectScreening(screening.id)">
+          {{ screening.start | localizedDate: 'time' }} <br/> {{ screening.hall | localized }}
+        </button>
+      }
+    </div>
+  </div>
+</div>

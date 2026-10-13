@@ -1,0 +1,31 @@
+<div class="card card-border m-4 shadow-md bg-gray-50">
+  <div class="card-body items-center">
+    <p class="italic">{{ 'tickets.congratulations' | t }}</p>
+    @if (tickets(); as loadedTickets) {
+      <div class="cursor-pointer mt-3 mb-4"
+        [class]="stacked() ? 'stack' : 'grid grid-cols-2 gap-4'"
+        (click)="toggleStacked()">
+        @for (ticket of loadedTickets; track ticket) {
+          <div>
+            <div class="card card-side card-dash rounded-md shadow-sm items-center bg-white">
+              <div class="card-body">
+                <p>{{ ticket.film }}</p>
+                <p>{{ ticket.start | localizedDate: 'dateTime' }}</p>
+                <p>{{ ticket.hall | localized }}</p>
+                <p>{{ 'tickets.seat' | t: {row: ticket.row, seat: ticket.seat} }}</p>
+              </div>
+              <figure class="mr-4">
+                <img class="h-32 w-32" src="assets/qr-code.png" [alt]="'tickets.qrCodeAlt' | t"/>
+              </figure>
+            </div>
+          </div>
+        }
+      </div>
+      <div class="card-actions">
+        <button class="btn btn-sm btn-primary" (click)="printTickets()">{{ 'tickets.print' | t }}</button>
+      </div>
+    } @else {
+      <div class="loading loading-dots loading-sm"></div>
+    }
+  </div>
+</div>

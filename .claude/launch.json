@@ -1,0 +1,38 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "kino-backend-8080",
+      "runtimeExecutable": "backend/mvnw",
+      "runtimeArgs": [
+        "-q",
+        "-f",
+        "backend/pom.xml",
+        "spring-boot:run"
+      ],
+      "port": 8080
+    },
+    {
+      "name": "kino-backend-8082",
+      "runtimeExecutable": "backend/mvnw",
+      "runtimeArgs": [
+        "-q",
+        "-f",
+        "backend/pom.xml",
+        "spring-boot:run",
+        "-Dspring-boot.run.arguments=--server.port=8082"
+      ],
+      "port": 8082
+    },
+    {
+      "name": "kino-frontend-4200",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        "frontend",
+        "start"
+      ],
+      "port": 4200
+    }
+  ]
+}

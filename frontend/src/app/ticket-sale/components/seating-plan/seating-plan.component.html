@@ -1,0 +1,53 @@
+<div class="card card-border m-4 shadow-md bg-gray-50">
+  @if (done()) {
+    <div class="card-body items-center">
+      <p class="italic">{{ 'seats.chosen' | t }}</p>
+      <p class="card-title">{{ selectedSeatsLabel() }}</p>
+    </div>
+  } @else {
+    <div class="card-body items-center">
+      @if (seatsLoaded()) {
+        @if (seatsFound()) {
+          <p class="italic">{{ 'seats.question' | t }}</p>
+        } @else {
+          <p class="text-error">{{ 'seats.notFound' | t: {count: seatCount()} }}</p>
+        }
+      } @else {
+        <div class="loading loading-dots loading-sm"></div>
+      }
+      @if (seatingPlanLoaded()) {
+        <svg class="border" [attr.height]="seatingPlanHeight()" [attr.width]="seatingPlanWidth()">
+          <rect [attr.width]="screenWidth()"
+            [attr.x]="screenPosition()"
+            height="16"
+            fill="white"
+            stroke="black"
+            />
+          @for (seatsInRow of seatRows(); track seatsInRow; let rowIndex = $index) {
+            @for (seat of seatsInRow; track seat; let columnIndex = $index) {
+              <circle
+                [attr.cx]="getStartX(seatsInRow) + columnIndex * spacing"
+                [attr.cy]="startY + rowIndex * rowSpacing"
+                [attr.r]="radius"
+                [attr.fill]="getSeatColor(seat)"
+                stroke="black"
+                (mouseenter)="seatEnter(rowIndex, columnIndex)"
+                (mouseleave)="seatLeave()"
+                (click)="seatClick(rowIndex, columnIndex)"
+                />
+            }
+          }
+        </svg>
+      } @else {
+        <div class="skeleton h-32 w-64"></div>
+      }
+      <div class="card-actions">
+        <button class="btn btn-sm btn-primary"
+          [disabled]="selectedSeats() === undefined || selectedSeats()!.seats.length === 0"
+          (click)="confirmSeats()">
+          {{ 'seats.confirm' | t }}
+        </button>
+      </div>
+    </div>
+  }
+</div>

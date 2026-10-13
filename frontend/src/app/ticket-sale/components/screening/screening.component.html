@@ -1,0 +1,22 @@
+<div class="card card-border m-4 shadow-md bg-gray-50">
+  <div class="card-body items-center">
+      <p class="italic">{{ 'ticketSale.screening.chosen' | t }}</p>
+    @if (screening(); as s) {
+      <div class="card-title">
+        {{ s.film }}
+      </div>
+      <div class="text-info-content">
+        {{ s.start | localizedDate: 'weekday' }}
+        <span>⋅</span>
+        {{ s.start | localizedDate: 'date' }}
+        <span>⋅</span>
+        {{ s.start | localizedDate: 'time' }}
+        <span>⋅</span>
+        {{ s.hall | localized }}
+      </div>
+    } @else {
+      <div class="loading loading-dots loading-sm"></div>
+    }
+    </div>
+  </div>
+

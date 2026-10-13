@@ -1,0 +1,9 @@
+<app-navbar [title]="'program.title' | t"/>
+
+<app-calendar (dateSelected)="selectDate($event)"/>
+
+<div class="flex flex-col">
+  @for (film of films(); track film) {
+    <app-program-entry [film]="film"/>
+  }
+</div>

@@ -1,0 +1,50 @@
+<div class="card card-border m-4 shadow-md bg-gray-50">
+  <div class="card-body items-center">
+    @if (done() && saleTransaction(); as transaction) {
+      <p class="italic">{{ 'checkout.paid' | t }}</p>
+      <p class="card-title">
+        {{ transaction.totalPrice.amount | moneyAmount }} {{ transaction.totalPrice.currency }}
+      </p>
+    } @else if (processing()) {
+      <p class="italic">{{ 'checkout.processing' | t }}</p>
+      <div class="loading loading-dots loading-md"></div>
+    } @else {
+      <p class="italic">{{ 'checkout.amountDue' | t }}</p>
+      @if (totalAmount(); as total) {
+        <p class="card-title">
+          {{ total.amount | moneyAmount }} {{ total.currency }}
+        </p>
+        @if (cancelled()) {
+          <p class="text-error">
+            {{ 'checkout.cancelled' | t }}
+          </p>
+        }
+        @if (paymentInProgress()) {
+          <p class="italic">
+            {{ 'checkout.inProgress' | t }}
+          </p>
+          <div class="card-actions">
+            <button class="btn btn-sm btn-primary" (click)="resumePayment()">
+              {{ 'checkout.resume' | t }}
+            </button>
+          </div>
+        } @else {
+          <div class="card-actions">
+            <button class="btn btn-sm btn-primary" (click)="pay()">
+              {{ (cancelled() ? 'checkout.retry' : 'checkout.proceed') | t }}
+            </button>
+          </div>
+        }
+      } @else {
+        <div class="loading loading-dots loading-sm"></div>
+      }
+    }
+  </div>
+</div>
+
+  <app-payment-dialog
+    #paymentDialog
+    class="w-full"
+    (paid)="paymentPaid()"
+    (cancelled)="paymentCancelled()"
+  />
